@@ -15,6 +15,7 @@ export default function AppTextinput({ icon, backgroundColor = colors.lightBg, .
                 <Image
                     style={styles.inputIcon}
                     source={icon}
+                    resizeMode="contain"
                 />
             )}
         </View>
@@ -24,7 +25,6 @@ export default function AppTextinput({ icon, backgroundColor = colors.lightBg, .
 const styles = StyleSheet.create({
     container: {
         borderRadius: 8,
-        // backgroundColor: colors.white,
         width: '100%',
         height: 50,
         flexDirection: "row",

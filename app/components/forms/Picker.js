@@ -4,26 +4,16 @@ import colors from "../../config/colors";
 import AppText from "../AppText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const App = () => {
-    const [modalVisible, setModalVisible] = useState(false);
-    const [selectedItem, setSelectedItem] = useState({});
-    const DATA = [
-        {
-            id: '1',
-            title: 'First Item',
-        },
-        {
-            id: '2',
-            title: 'Second Item',
-        },
-        {
-            id: '3',
-            title: 'Third Item',
-        },
-    ]
+const App = ({ setModalVisible, modalVisible, citiesOptions, setSelectedItem }) => {
+    // const [modalVisible, setModalVisible] = useState(false);
+    // const [selectedItem, setSelectedItem] = useState({});
+
     const renderItem = (item) => (
-        <TouchableOpacity style={styles.item} onPress={() => setSelectedItem(item)}>
-            <AppText style={styles.title}>{item?.title}</AppText>
+        <TouchableOpacity style={styles.item} onPress={() => {
+            setSelectedItem(item)
+            setModalVisible(false)
+        }}>
+            <AppText style={styles.title}>{item?.label}</AppText>
         </TouchableOpacity>
     );
     return (
@@ -39,7 +29,7 @@ const App = () => {
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <FlatList
-                            data={DATA}
+                            data={citiesOptions}
                             renderItem={({ item }) => renderItem(item)}
                             keyExtractor={item => item.id}
                             style={{ width: '100%' }}
@@ -50,18 +40,12 @@ const App = () => {
                         >
                             <MaterialCommunityIcons
                                 name="close"
-                                size={17}
+                                size={20}
                             />
                         </Pressable>
                     </View>
                 </View>
             </Modal>
-            <Pressable
-                style={[styles.button, styles.buttonOpen]}
-                onPress={() => setModalVisible(true)}
-            >
-                <Text style={styles.textStyle}>Show Modal</Text>
-            </Pressable>
         </View>
     );
 };
@@ -78,8 +62,9 @@ const styles = StyleSheet.create({
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
-        padding: 25,
+        padding: 35,
         paddingVertical: 40,
+        paddingTop: 50,
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
@@ -100,8 +85,8 @@ const styles = StyleSheet.create({
     },
     buttonClose: {
         position: "absolute",
-        top: 12,
-        right: 15
+        top: 15,
+        right: 18
     },
     textStyle: {
         color: "white",

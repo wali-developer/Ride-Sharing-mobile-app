@@ -7,19 +7,23 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import colors from "../config/colors";
 import HistoryScreen from "../screens/HistoryScreen";
 import HomeScreen from "../screens/HomeScreen";
+import RidesNavigator from "./RidesNavigator";
+import Chats from "../screens/auth/Chats";
+import Account from "../screens/Account";
+import ChatNavigator from "./ChatNavigator";
+
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => (
     <Tab.Navigator>
         <Tab.Screen
             name="Home"
-            component={HomeScreen}
+            component={RidesNavigator}
             options={{
                 headerShown: false,
                 headerTintColor: colors.gray,
                 tabBarActiveTintColor: colors.primary,
                 tabBarInactiveTintColor: colors.gray,
-                // tabBarLabelPosition:
                 tabBarIcon: ({ color, size }) =>
                     <MaterialCommunityIcons name="home" color={color} size={size} />
             }}
@@ -34,15 +38,16 @@ const AppNavigator = () => (
         />
         <Tab.Screen
             name="Chats"
-            component={HomeScreen}
+            component={ChatNavigator}
             options={{
+                headerShown: false,
                 tabBarIcon: ({ color, size }) =>
                     <Ionicons name="chatbubbles-outline" color={color} size={size} />
             }}
         />
         <Tab.Screen
             name="Profile"
-            component={HomeScreen}
+            component={Account}
             options={{
                 tabBarIcon: ({ color, size }) =>
                     <AntDesign name="user" color={color} size={size} />

@@ -1,4 +1,4 @@
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View, ActivityIndicator } from 'react-native';
 import React, { useState } from 'react'
 import AppText from '../../components/AppText'
 import AppButton from '../../components/AppButton'
@@ -7,6 +7,7 @@ import Textinput from '../../components/forms/TextInput';
 import authApi from '../../api/auth';
 import useAuth from '../../auth/useAuth';
 import ErrorMessage from '../../components/forms/ErrorMessage';
+import Loader from '../../components/Loader';
 
 export default function Signin() {
     const [loginData, setLoginData] = useState({
@@ -15,67 +16,78 @@ export default function Signin() {
     })
     const [loginFailed, setLoginFailed] = useState(false);
     const auth = useAuth();
+    const [loading, setLoading] = useState(false);
 
     const loginHandler = async () => {
+        setLoading(true)
         const response = await authApi.login(loginData?.email, loginData?.password)
-        if (!response.ok) return setLoginFailed(true);
+        setLoading(false)
+        if (!response.ok) {
+            setLoading(false)
+            setLoginFailed(true)
+        };
         setLoginFailed(false);
-        console.log(response.data)
+        console.log(response)
         auth.logIn(response.data?.token);
     }
 
     return (
-        <View style={styles.container}>
-            <Image
-                style={styles?.logo}
-                source={require("../../assets/logo-primary.png")}
-            />
-            <View style={styles.headingWrapper}>
-                <AppText style={styles.heading}>Sign in</AppText>
-                <AppText style={styles.text}>Please Sign in to your account</AppText>
-            </View>
-            <ErrorMessage
-                error="Email or Password is Incorrect"
-                visible={loginFailed}
-            />
-            <Textinput
-                placeholder='Enter email'
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="email-address"
-                textContentType="emailAddress"
-                disableFullScreenUI
-                icon={require('../../assets/gmail.png')}
-                onChangeText={(value) => setLoginData({ ...loginData, email: value })}
-            />
-            <Textinput
-                placeholder='Password'
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="phone-pad"
-                textContentType="emailAddress"
-                disableFullScreenUI
-                icon={require('../../assets/eye.png')}
-                secureTextEntry={true}
-                onChangeText={(value) => setLoginData({ ...loginData, password: value })}
-            />
-            <AppText style={styles.forgot}>Forgot password?</AppText>
-            <View style={styles.buttonWrapper}>
-                <AppButton
-                    title="Sign in"
-                    style={styles.signin}
-                    text={colors.white}
-                    onPress={loginHandler}
+        <>
+            {loading &&
+                <Loader loading={loading} />
+            }
+            <View style={styles.container}>
+                <Image
+                    style={styles?.logo}
+                    source={require("../../assets/logo-primary.png")}
                 />
+                <View style={styles.headingWrapper}>
+                    <AppText style={styles.heading}>Sign in</AppText>
+                    <AppText style={styles.text}>Please Sign in to your account</AppText>
+                </View>
+                <ErrorMessage
+                    error="Email or Password is Incorrect"
+                    visible={loginFailed}
+                />
+                <Textinput
+                    placeholder='Enter email'
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    keyboardType="email-address"
+                    textContentType="emailAddress"
+                    disableFullScreenUI
+                    icon={require('../../assets/gmail.png')}
+                    onChangeText={(value) => setLoginData({ ...loginData, email: value })}
+                />
+                <Textinput
+                    placeholder='Password'
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    keyboardType="phone-pad"
+                    textContentType="emailAddress"
+                    disableFullScreenUI
+                    icon={require('../../assets/eye.png')}
+                    secureTextEntry={true}
+                    onChangeText={(value) => setLoginData({ ...loginData, password: value })}
+                />
+                <AppText style={styles.forgot}>Forgot password?</AppText>
+                <View style={styles.buttonWrapper}>
+                    <AppButton
+                        title="Sign in"
+                        style={styles.signin}
+                        text={colors.white}
+                        onPress={loginHandler}
+                    />
+                </View>
+                <View style={styles.signUpText}>
+                    <AppText style={styles.text}>Don't have an account? <AppText style={{ color: colors.primary }}>Sign up</AppText></AppText>
+                </View>
+                <View style={styles.skipWrapper}>
+                    <AppText>Skip</AppText>
+                    <Image source={require('../../assets/right-arrow.png')} style={styles.rightIcon} />
+                </View>
             </View>
-            <View style={styles.signUpText}>
-                <AppText style={styles.text}>Don't have an account? <AppText style={{ color: colors.primary }}>Sign up</AppText></AppText>
-            </View>
-            <View style={styles.skipWrapper}>
-                <AppText>Skip</AppText>
-                <Image source={require('../../assets/right-arrow.png')} style={styles.rightIcon} />
-            </View>
-        </View>
+        </>
     )
 }
 

@@ -1,4 +1,4 @@
-import { StyleSheet, Image, View, TouchableOpacity, Button, TextInput, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Image, View, TouchableOpacity, Button, TextInput, Pressable } from 'react-native';
 import React, { useState } from 'react';
 import Screen from '../components/Screen';
 import AppText from '../components/AppText';
@@ -11,122 +11,177 @@ import colors from '../config/colors';
 import Picker from '../components/forms/Picker';
 import { Ionicons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
+import Loader from '../components/Loader';
+import searchApi from '../api/searchRides';
+import apiClient from '../api/client';
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
     const [fromCity, setFromCity] = useState('');
     const [toCity, setToCity] = useState('');
+    const [date, setDate] = useState(new Date(1598051730000));
+    const [passengers, setPassengers] = useState(0);
+    const [loading, setLoading] = useState(false);
+
     const [openModal, setOpenModal] = useState(false);
+    const [selectedItem, setSelectedItem] = useState({});
+
+    const [openDestination, setOpenDestination] = useState(false);
+    const [selecteddestination, setSelecteddestination] = useState({});
 
     const citiesOptions = [
         {
+            id: 1,
             label: 'Peshawar',
-            value: 'peshawar'
+            value: 'Peshawar'
         },
         {
+            id: 2,
             label: 'Islamabad',
-            value: 'islamabad'
+            value: 'Islamabad'
         },
         {
+            id: 3,
             label: 'Abbottabad',
-            value: 'abbottabad'
+            value: 'Abbottabad'
         },
         {
+            id: 4,
             label: 'Battagram',
-            value: 'battagram'
+            value: 'Battagram'
         },
         {
+            id: 5,
             label: 'Lahore',
-            value: 'lahore'
+            value: 'Lahore'
         },
     ]
 
-    return (
-        <Screen style={styles.container}>
-            <View style={styles.header}>
-                <View style={{ width: 45, height: 45, borderRadius: 100, overflow: "hidden", backgroundColor: "red" }}>
-                    <Image
-                        style={styles?.avatar}
-                        source={require("../assets/avatar.png")}
-                        resizeMode="contain" />
-                </View>
+    const searchRides = async (navigation) => {
+        setLoading(true)
+        const payload = {
+            goingFrom: selectedItem?.value,
+            goingTo: selecteddestination?.value,
+            date: date,
+            passengerNeeded: passengers
+        }
+        console.log("Payload: ", payload)
+        try {
+            // const response = await searchApi?.searchRides(payload?.goingFrom, payload?.goingTo);
+            const { data } = await apiClient.get("/publishride", payload);
+            if (Array.isArray(data)) {
 
-                <View style={styles.notificationWrapper}>
-                    <Image
-                        style={styles?.notification}
-                        source={require("../assets/notification.png")}
-                    />
-                    <View style={styles.notificationDot}></View>
-                </View>
-            </View>
-            <View style={styles.headingWrapper}>
-                <AppText style={defaultStyle.text}>Hi Usman</AppText>
-                <AppText style={styles.headingText}>Good Morning!</AppText>
-            </View>
-            <AppText style={styles.searchHeading}>Search for a Ride</AppText>
-            <View style={styles.formWrapper}>
-                {/* <TextPicker value={fromCity} setValue={setFromCity} options={citiesOptions} label="From city" /> */}
-                <AppText>From City</AppText>
-                <TouchableOpacity style={styles.inputWrapper}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Ionicons name="location-outline" size={23} color={colors.gray} />
-                        <TextInput
-                            placeholder='Select city'
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            disableFullScreenUI
-                            style={{ marginLeft: 10 }}
-                        />
+                const filterResults = data?.filter((ride, index) => {
+                    return ride.goingfrom === payload?.goingFrom && ride.goingto === payload?.goingTo
+                });
+                navigation.navigate('AvailableRides', { data: filterResults, userFromData: payload })
+            }
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            console.log(error)
+        }
+    }
+
+    // console.log(date.toLocaleDateString());
+
+    return (
+        <>
+            {loading && <Loader loading={loading} />}
+            <Screen style={styles.container}>
+                <View style={styles.header}>
+                    <View style={{ width: 45, height: 45, borderRadius: 100, overflow: "hidden", backgroundColor: "red" }}>
+                        <Image
+                            style={styles?.avatar}
+                            source={require("../assets/avatar.png")}
+                            resizeMode="contain" />
                     </View>
-                    <Entypo name="chevron-thin-right" size={12} color={colors.gray} />
-                </TouchableOpacity>
-                <AppText>To City</AppText>
-                <TouchableOpacity style={styles.inputWrapper}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Ionicons name="location-outline" size={23} color={colors.gray} />
-                        <TextInput
-                            placeholder='Select city'
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            disableFullScreenUI
-                            style={{ marginLeft: 10 }}
+
+                    <View style={styles.notificationWrapper}>
+                        <Image
+                            style={styles?.notification}
+                            source={require("../assets/notification.png")}
                         />
-                    </View>
-                    <Entypo name="chevron-thin-right" size={12} color={colors.gray} />
-                </TouchableOpacity>
-                <View style={styles.inputsRow}>
-                    <View style={{ width: '47%' }}>
-                        <DatePicker />
-                    </View>
-                    <View style={{ width: '47%' }}>
-                        <AppText>Passengers</AppText>
-                        <TextInput
-                            placeholder='Password'
-                            autoCapitalize="none"
-                            autoCorrect={false}
-                            keyboardType="phone-pad"
-                            disableFullScreenUI
-                            secureTextEntry={true}
-                            backgroundColor={colors.lightBg}
-                            style={styles.inputWrapper}
-                        />
+                        <View style={styles.notificationDot}></View>
                     </View>
                 </View>
-                {/* <TouchableOpacity onPress={() => setOpenModal(true)}>
-                    <Button title="Open modal"></Button>
-                </TouchableOpacity> */}
-                <View style={styles.buttonWrapper}>
-                    <AppButton
-                        title="Search"
-                        style={styles.signin}
-                        text={colors.white}
-                    />
+                <View style={styles.headingWrapper}>
+                    <AppText style={defaultStyle.text}>Hi Usman</AppText>
+                    <AppText style={styles.headingText}>Good Morning!</AppText>
                 </View>
-            </View>
-            {/* <Picker
-                setOpenModal={setOpenModal}
-                visibility={openModal}
-            /> */}
-        </Screen>
+                <AppText style={styles.searchHeading}>Search for a Ride</AppText>
+                <View style={styles.formWrapper}>
+                    <AppText>From City</AppText>
+                    <Pressable onPress={() => setOpenModal(true)}>
+                        <View style={styles.inputWrapper}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Ionicons name="location-outline" size={23} color={colors.gray} />
+                                <TextInput
+                                    placeholder={selectedItem ? selectedItem?.label : 'Select city'}
+                                    autoCapitalize="none"
+                                    autoCorrect={false}
+                                    disableFullScreenUI
+                                    style={{ marginLeft: 10 }}
+                                />
+                            </View>
+                            <Entypo name="chevron-thin-right" size={12} color={colors.gray} />
+                        </View>
+                    </Pressable>
+                    <AppText>To City</AppText>
+                    <Pressable style={styles.inputWrapper} onPress={() => setOpenDestination(true)}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Ionicons name="location-outline" size={23} color={colors.gray} />
+                            <TextInput
+                                placeholder={selecteddestination ? selecteddestination?.label : 'Select city'}
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                disableFullScreenUI
+                                style={{ marginLeft: 10 }}
+                            />
+                        </View>
+                        <Entypo name="chevron-thin-right" size={12} color={colors.gray} />
+                    </Pressable>
+                    <View style={styles.inputsRow}>
+                        <View style={{ width: '47%' }}>
+                            <DatePicker date={date} setDate={setDate} />
+                        </View>
+                        <View style={{ width: '47%' }}>
+                            <AppText>Passengers</AppText>
+                            <TextInput
+                                placeholder='Passengers'
+                                autoCapitalize="none"
+                                autoCorrect={false}
+                                keyboardType="phone-pad"
+                                disableFullScreenUI
+                                secureTextEntry={true}
+                                backgroundColor={colors.lightBg}
+                                style={styles.inputWrapper}
+                                onChangeText={(value) => setPassengers(value)}
+                            />
+                        </View>
+                    </View>
+                    <View style={styles.buttonWrapper}>
+                        <AppButton
+                            title="Search"
+                            style={styles.signin}
+                            text={colors.white}
+                            onPress={() => searchRides(navigation)}
+                        />
+                    </View>
+                </View>
+                <Picker
+                    setModalVisible={setOpenModal}
+                    modalVisible={openModal}
+                    citiesOptions={citiesOptions}
+                    setSelectedItem={setSelectedItem}
+                />
+                <Picker
+                    setModalVisible={setOpenDestination}
+                    modalVisible={openDestination}
+                    citiesOptions={citiesOptions}
+                    setSelectedItem={setSelecteddestination}
+                />
+            </Screen>
+        </>
     )
 }
 

@@ -5,8 +5,10 @@ export default {
   darkBlack: '#161D25',
   white: "#fff",
   gray: "#5A7184",
+  lightGray: '#A2ABC4',
   light: "#f8f4f4",
   dark: "#0c0c0c",
   danger: "#ff5252",
-  lightBg: '#F6F6F6'
+  lightBg: '#F6F6F6',
+  yellow: '#FBB03B'
 };

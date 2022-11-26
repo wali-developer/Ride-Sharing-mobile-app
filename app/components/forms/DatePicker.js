@@ -5,8 +5,7 @@ import colors from "../../config/colors";
 import AppText from "../AppText";
 import defaultStyle from "../../config/style";
 
-const DatePicker = () => {
-    const [date, setDate] = useState(new Date(1598051730000));
+const DatePicker = ({ date, setDate }) => {
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
 
@@ -15,8 +14,7 @@ const DatePicker = () => {
         setShow(false);
         setDate(currentDate);
     };
-    const d = date.toLocaleDateString();
-    console.log(d)
+    // const d = date.toLocaleDateString();
 
     const showMode = (currentMode) => {
         if (Platform.OS === 'android') {
@@ -33,17 +31,6 @@ const DatePicker = () => {
 
     return (
         <View>
-            {/* <Button onPress={showDatepicker} title="Select" style={styles.dataPicker} />
-            {show && (
-                <DateTimePicker
-                    testID="dateTimePicker"
-                    value={date}
-                    mode={mode}
-                    is24Hour={true}
-                    onChange={onChange}
-                />
-            )} */}
-
             <AppText style={defaultStyle.text}>Date</AppText>
             <TouchableOpacity onPress={showDatepicker}>
                 <View style={styles.dataPicker}>
