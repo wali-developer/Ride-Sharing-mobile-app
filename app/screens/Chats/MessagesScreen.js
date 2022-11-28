@@ -1,5 +1,5 @@
-import { ScrollView, StyleSheet, View, Textinput, TextInput } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { ScrollView, StyleSheet, View, Textinput, TextInput, Pressable, TouchableOpacity } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
 import AppText from '../../components/AppText'
 import colors from '../../config/colors';
 import { AntDesign } from '@expo/vector-icons';
@@ -8,32 +8,66 @@ import Screen from '../../components/Screen';
 import apiClient from '../../api/client';
 import storage from '../../auth/storage';
 import Loader from '../../components/Loader';
+import { format } from 'timeago.js';
 
 function MessagesScreen({ route }) {
     const { conversation, currentUser } = route?.params;
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [newMessage, setNewMessage] = useState(null);
+    const scrollRef = useRef();
 
     useEffect(() => {
         getMessages();
         // storage.removeToken();
     }, [])
+
     const getMessages = async () => {
         setLoading(true)
         try {
             const { data } = await apiClient.get(`/messages/${conversation?._id}`);
             if (data) setMessages(data);
-            etLoading(false)
+            setLoading(false)
         } catch (error) {
             setLoading(false)
             console.log(error)
         }
     }
+
+    const storeMessage = async () => {
+        const message = {
+            conversationId: conversation?._id,
+            sender: currentUser?._id,
+            text: newMessage
+        }
+        if (message?.text == '') {
+            alert("Empty message can't be send")
+        } else {
+            try {
+                const response = await apiClient.post('/messages', message);
+                // console.log("New Message--------------", data)
+                if (response?.ok) {
+                    setMessages([...messages, response?.data]);
+                    setNewMessage(null);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+
+    // useEffect(() => {
+    //     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    // }, [messages]);
+
     return (
         <>
             {loading && <Loader loading={loading} />}
-            <Screen style={styles.container}>
-                <ScrollView style={styles.MessagesWrapper}>
+            <Screen style={styles.container} >
+                <ScrollView
+                    style={styles.MessagesWrapper}
+                    ref={scrollRef}
+                >
                     <AppText style={styles.dayText}>Today</AppText>
                     {messages?.map((msg, index) => {
                         return (
@@ -41,16 +75,16 @@ function MessagesScreen({ route }) {
                                 {msg?.sender !== currentUser?._id ? (
                                     <View style={styles.receiveMessage}>
                                         <View style={styles.message}>
-                                            <AppText style={styles.messageText}>Ths is some message text that user has received.</AppText>
+                                            <AppText style={styles.messageText}>{msg?.text}</AppText>
                                         </View>
-                                        <AppText style={styles.messageTime}>4:30 PM</AppText>
+                                        <AppText style={styles.messageTime}>{format(msg?.date)}</AppText>
                                     </View>
                                 ) : (
                                     <View style={styles.sendMessage}>
                                         <View style={[styles.message, styles.senderMessage]}>
-                                            <AppText style={styles.senderText}>Ths is some message text that user has sent.</AppText>
+                                            <AppText style={styles.senderText}>{msg?.text}</AppText>
                                         </View>
-                                        <AppText style={styles.sendermessageTime}>4:30 PM</AppText>
+                                        <AppText style={styles.sendermessageTime}>{format(msg?.date)}</AppText>
                                     </View>
                                 )}
                             </View>
@@ -65,9 +99,11 @@ function MessagesScreen({ route }) {
                         autoCorrect={false}
                         disableFullScreenUI
                         style={styles.messageInput}
-                    // onChangeText={(value) => setRegisterPayload({ ...registerPayload, email: value })}
+                        onChangeText={(value) => setNewMessage(value)}
                     />
-                    <Feather name="send" size={24} color={colors.gray} />
+                    <TouchableOpacity onPress={storeMessage}>
+                        <Feather name="send" size={24} color={colors.gray} />
+                    </TouchableOpacity>
                 </View>
             </Screen>
         </>

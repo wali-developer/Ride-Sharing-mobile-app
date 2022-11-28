@@ -49,6 +49,7 @@ const AppNavigator = () => (
             name="Profile"
             component={Account}
             options={{
+                headerShown: false,
                 tabBarIcon: ({ color, size }) =>
                     <AntDesign name="user" color={color} size={size} />
             }}
