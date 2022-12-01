@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     listItemContainer: {
         flexDirection: "row",
         padding: 15,
+        paddingHorizontal: 35
     },
     image: {
         width: 60,
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     title: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: "500",
         color: colors.black,
     },

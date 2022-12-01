@@ -11,6 +11,7 @@ import RidesNavigator from "./RidesNavigator";
 import Chats from "../screens/auth/Chats";
 import Account from "../screens/Account";
 import ChatNavigator from "./ChatNavigator";
+import AccountNavigator from "./AccountNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -46,8 +47,8 @@ const AppNavigator = () => (
             }}
         />
         <Tab.Screen
-            name="Profile"
-            component={Account}
+            name="MyAccount"
+            component={AccountNavigator}
             options={{
                 headerShown: false,
                 tabBarIcon: ({ color, size }) =>

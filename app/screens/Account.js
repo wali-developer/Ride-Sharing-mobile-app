@@ -1,15 +1,16 @@
 import { Button, StyleSheet, View, Image, FlatList } from 'react-native'
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Screen from '../components/Screen';
 import storage from '../auth/storage';
 import colors from '../config/colors';
 import Icon from '../components/Icon';
 import ListItem from '../components/ListItem';
 import useAuth from '../auth/useAuth';
+import AppText from '../components/AppText';
+import apiClient from '../api/client';
 
 // List item array
 const listingsData = [
-
     {
         id: 1,
         title: "Edit Profile",
@@ -17,7 +18,7 @@ const listingsData = [
             name: "account-edit-outline",
             backgroundColor: colors.secondary,
         },
-        targetScreen: "Messages",
+        targetScreen: "Profile",
     },
     {
         id: 2,
@@ -29,15 +30,27 @@ const listingsData = [
     },
 ];
 
-export default function Account() {
+export default function Account({ navigation }) {
     const { user, logOut } = useAuth();
+    const [userData, setUserData] = useState(null);
+
+
+    useEffect(() => {
+        if (user) {
+            apiClient.get(`user/${user?._id}`).then(res => {
+                setUserData(res?.data);
+            }).catch(err => console.log(err));
+        }
+    }, [user])
+
     return (
         <Screen style={styles.container}>
             <View style={styles.cover}>
                 <Image source={require('../assets/myPic.jpg')} style={styles.profile} />
             </View>
+            <AppText style={styles.userName}>{userData?.fullName}</AppText>
             <View style={styles.listWrapper}>
-                <View style={[styles.List, { marginTop: 35 }]}>
+                <View style={[styles.List, { marginTop: 25 }]}>
                     <FlatList
                         data={listingsData}
                         keyExtractor={(listingItem) => listingItem.id.toString()}
@@ -50,7 +63,7 @@ export default function Account() {
                                         backgroundColor={item.icon.backgroundColor}
                                     />
                                 }
-                            // onPress={() => navigation.navigate(item.targetScreen)}
+                                onPress={() => navigation.navigate(item.targetScreen)}
                             />
                         )}
                     />
@@ -87,16 +100,23 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         marginBottom: -130
     },
+    userName: {
+        marginTop: 60,
+        fontSize: 22,
+        fontWeight: '600',
+        color: colors.darkBlack,
+        textAlign: 'center'
+    },
     listWrapper: {
         flex: 1,
         backgroundColor: colors.white,
         borderTopRightRadius: 60,
         borderTopLeftRadius: 60,
-        marginTop: 80
+        marginTop: 30
     },
     List: {
         marginVertical: 10,
-        paddingHorizontal: 20,
+        paddingHorizontal: 0,
         backgroundColor: colors.white,
     },
 })

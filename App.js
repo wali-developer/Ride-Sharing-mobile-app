@@ -34,8 +34,6 @@ export default function App() {
     <AuthContext.Provider value={{ user, setUser }}>
       <NavigationContainer theme={NavigationTheme}>
         {user ? <AppNavigator /> : <AuthNavigator />}
-        {/* <AuthNavigator /> */}
-        {/* <AvailableRides /> */}
       </NavigationContainer>
 
     </AuthContext.Provider>

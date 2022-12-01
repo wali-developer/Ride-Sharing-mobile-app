@@ -31,18 +31,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingHorizontal: 20,
         marginVertical: 8,
-        shadowColor: '#1010101A',
-        shadowOffset: 0.2,
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-        borderWidth: 2,
-        borderColor: '#1010101A'
+        shadowColor: 'rgba(0,0,0,0.4)',
+        elevation: 2,
     },
     input: {
-        backgroundColor: 'transparent',
         color: defaultStyle.text,
         flex: 1,
-        height: '100%'
+        height: '100%',
     },
     inputIcon: {
         width: 18,

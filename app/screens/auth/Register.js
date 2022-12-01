@@ -8,6 +8,7 @@ import usersApi from '../../api/users';
 import authApi from '../../api/auth';
 import Loader from '../../components/Loader';
 import useAuth from '../../auth/useAuth';
+import apiClient from '../../api/client';
 
 export default function Register() {
     const auth = useAuth();
@@ -21,12 +22,12 @@ export default function Register() {
     const createUser = async () => {
         setLoading(true)
         try {
-            const response = await usersApi.register(registerPayload)
+            // const response = await usersApi.register(registerPayload)
+            const response = await apiClient.post('/user/register', registerPayload)
             console.log("Response: ", response?.data)
-            setLoading(false)
             if (response.data && response.ok) {
                 console.log(response.data)
-                alert(response.data);
+                alert(response?.data)
             }
             else {
                 alert("An unexpected error occurred.");
@@ -37,7 +38,9 @@ export default function Register() {
                 email: '',
                 password: ''
             })
+            setLoading(false)
         } catch (error) {
+            setLoading(false)
             console.log(error)
         }
 
