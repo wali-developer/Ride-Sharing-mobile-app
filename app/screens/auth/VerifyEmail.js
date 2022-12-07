@@ -1,11 +1,11 @@
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
 import React from 'react'
 import AppText from '../../components/AppText'
 import AppButton from '../../components/AppButton'
 import colors from '../../config/colors'
 import Textinput from '../../components/forms/TextInput';
 
-export default function VerifyEmail() {
+export default function VerifyEmail({ navigation }) {
     return (
         <>
             <View style={styles.container}>
@@ -32,6 +32,7 @@ export default function VerifyEmail() {
                         title="Send Code"
                         style={styles.signin}
                         text={colors.white}
+                        onPress={() => navigation?.navigate('ResetPassword')}
                     />
                 </View>
                 <View style={styles.signInText}>
@@ -40,11 +41,13 @@ export default function VerifyEmail() {
                     </AppText>
                 </View>
                 <View style={styles.skipWrapper}>
-                    <AppText>Skip</AppText>
+                    <Pressable onPress={() => navigation.navigate('Login')}>
+                        <AppText>Skip</AppText>
+                    </Pressable>
                     <Image source={require('../../assets/right-arrow.png')} style={styles.rightIcon} />
                 </View>
             </View>
-            <Image source={require('../../assets/left-arrow.png')} style={styles.backButton} />
+            {/* <Image source={require('../../assets/left-arrow.png')} style={styles.backButton} /> */}
         </>
     )
 }

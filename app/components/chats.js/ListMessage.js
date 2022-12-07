@@ -7,6 +7,17 @@ import apiClient from '../../api/client';
 
 export default function ListMessage({ conversation, currentUser, navigation }) {
     const [conversationUser, setConversationUser] = useState(null);
+    const [userName, setUserName] = useState('');
+
+
+    // get User details
+    useEffect(() => {
+        if (currentUser) {
+            apiClient.get(`user/${currentUser?._id}`).then(res => {
+                setUserName(res?.data?.fullName);
+            }).catch(err => console.log(err));
+        }
+    }, [currentUser])
 
     useEffect(() => {
         const friendId = conversation?.members?.find(m => m !== currentUser?._id);
@@ -15,9 +26,21 @@ export default function ListMessage({ conversation, currentUser, navigation }) {
             setConversationUser(data);
         }
         getConversationUser();
+
+        // 
     }, [])
+
     return (
-        <Pressable style={styles.container} onPress={() => navigation.navigate('Messages', { conversation: conversation, currentUser: currentUser })}>
+        <Pressable
+            style={styles.container}
+            onPress={() => navigation.navigate('Messages',
+                {
+                    conversation: conversation,
+                    currentUser: currentUser,
+                    name: userName,
+                })
+            }
+        >
             <View style={styles.profileWrapper}>
                 <SimpleLineIcons name="user" size={26} color="white" />
             </View>

@@ -41,36 +41,6 @@ export default function Chat({ navigation }) {
             console.log(error)
         }
     }
-    const USERS = [
-        {
-            id: 1,
-            name: 'Fahad Khan',
-            text: 'This is some short text of the recent message that user have send.',
-            time: '3 min ago',
-            msgs: '2'
-        },
-        {
-            id: 2,
-            name: 'Ali Raza',
-            text: 'This is some short text of the recent message that user have send.',
-            time: 'a hour ago',
-            msgs: null
-        },
-        {
-            id: 3,
-            name: 'Zubair Majid',
-            text: 'This is some short text of the recent message that user have send.',
-            time: '42 min ago',
-            msgs: '5'
-        },
-        {
-            id: 4,
-            name: 'Rehan Ali',
-            text: 'This is some short text of the recent message that user have send.',
-            time: '2 days ago',
-            msgs: '1'
-        },
-    ]
     return (
         <>
             {loading && <Loader loading={loading} />}

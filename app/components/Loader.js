@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         zIndex: 1000,
         backgroundColor: 'rgba(0,0,0,0.3)',
         position: 'absolute',
-        elevation: 5
+        elevation: 0
     },
 });
 

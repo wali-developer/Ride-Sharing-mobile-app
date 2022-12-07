@@ -1,13 +1,15 @@
-import { ScrollView, StyleSheet } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import Screen from '../components/Screen'
 import React, { useEffect, useState } from 'react'
 import Card from '../components/availableRides/Card'
 import apiClient from '../api/client'
 import authStorage from '../auth/storage';
 import Loader from '../components/Loader'
+import AppText from '../components/AppText'
+import colors from '../config/colors'
 
-export default function HistoryScreen() {
-    const [rides, setRides] = useState();
+export default function HistoryScreen({ navigation }) {
+    const [rides, setRides] = useState([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -16,8 +18,7 @@ export default function HistoryScreen() {
             const user = await authStorage.getUser();
             if (user) {
                 setLoading(true)
-                apiClient.get(`/requestride/${user?._id}`).then(res => {
-                    console.log("My rides: ", res?.data)
+                apiClient.get(`/publishride/user_rides/${user?._id}`).then(res => {
                     setLoading(false)
                     setRides(res?.data);
                 }).catch(err => {
@@ -33,9 +34,15 @@ export default function HistoryScreen() {
             {loading && <Loader loading={loading} />}
             <Screen style={styles.container}>
                 <ScrollView style={styles.container}>
-                    {rides?.map((ride, index) => (
-                        <Card ride={ride} key={index} userRides={true} />
-                    ))}
+                    {
+                        rides?.map((ride, index) => (
+                            <Card ride={ride} key={index} userRides={true} navigation={navigation} />
+                        ))
+                    }
+                    {rides.length == 0 && (
+                        <AppText style={styles.text}>You have no previous rides</AppText>
+                    )}
+
                 </ScrollView>
             </Screen>
         </>
@@ -45,5 +52,10 @@ export default function HistoryScreen() {
 const styles = StyleSheet.create({
     container: {
         paddingHorizontal: 5
+    },
+    text: {
+        fontSize: 20,
+        fontWeight: '700',
+        textAlign: 'center',
     }
 })

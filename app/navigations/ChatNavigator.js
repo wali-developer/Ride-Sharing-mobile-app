@@ -21,13 +21,16 @@ const ChatNavigator = () => (
         <Stack.Screen
             name="Messages"
             component={MessagesScreen}
-            options={{
+            options={({ route }) => ({
                 headerTintColor: '#5C6373',
                 headerShadowVisible: false,
                 headerBackground: () => <HeaderBackground />,
                 // headerBackImageSource: '',
                 // headerBackTitle: 'Wali Ullah'
-            }}
+                title: route.params.name
+
+            })}
+        // options={({ route }) => ({ title: route.params.name })}
         />
     </Stack.Navigator>
 )

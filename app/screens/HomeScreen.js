@@ -1,5 +1,5 @@
-import { StyleSheet, Image, View, TouchableOpacity, Button, TextInput, Pressable } from 'react-native';
-import React, { useState } from 'react';
+import { StyleSheet, Image, View, TouchableOpacity, Button, TextInput, Pressable, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import Screen from '../components/Screen';
 import AppText from '../components/AppText';
 import defaultStyle from '../config/style';
@@ -14,19 +14,30 @@ import { Entypo } from '@expo/vector-icons';
 import Loader from '../components/Loader';
 import searchApi from '../api/searchRides';
 import apiClient from '../api/client';
+import useAuth from '../auth/useAuth';
 
 export default function HomeScreen({ navigation }) {
+    const { user } = useAuth();
     const [fromCity, setFromCity] = useState('');
     const [toCity, setToCity] = useState('');
     const [date, setDate] = useState(new Date(1598051730000));
     const [passengers, setPassengers] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [userData, setUserData] = useState(null);
 
     const [openModal, setOpenModal] = useState(false);
     const [selectedItem, setSelectedItem] = useState({});
 
     const [openDestination, setOpenDestination] = useState(false);
     const [selecteddestination, setSelecteddestination] = useState({});
+
+    // Get user data
+    useEffect(() => {
+        apiClient.get(`user/${user?._id}`).then(res => {
+            setUserData(res?.data);
+        }).catch(err => console.log(err));
+
+    }, [user])
 
     const citiesOptions = [
         {
@@ -86,101 +97,105 @@ export default function HomeScreen({ navigation }) {
 
     return (
         <>
-            {loading && <Loader loading={loading} />}
-            <Screen style={styles.container}>
-                <View style={styles.header}>
-                    <View style={{ width: 45, height: 45, borderRadius: 100, overflow: "hidden", backgroundColor: "red" }}>
-                        <Image
-                            style={styles?.avatar}
-                            source={require("../assets/avatar.png")}
-                            resizeMode="contain" />
-                    </View>
+            <ScrollView>
+                <Screen style={styles.container}>
+                    <View style={styles.header}>
+                        <View style={{ width: 45, height: 45, borderRadius: 100, overflow: "hidden", backgroundColor: "red" }}>
+                            <Image
+                                style={styles?.avatar}
+                                source={require("../assets/avatar.png")}
+                                resizeMode="contain" />
+                        </View>
 
-                    <View style={styles.notificationWrapper}>
-                        <Image
-                            style={styles?.notification}
-                            source={require("../assets/notification.png")}
-                        />
-                        <View style={styles.notificationDot}></View>
+                        <View style={styles.notificationWrapper}>
+                            <Image
+                                style={styles?.notification}
+                                source={require("../assets/notification.png")}
+                            />
+                            <View style={styles.notificationDot}></View>
+                        </View>
                     </View>
-                </View>
-                <View style={styles.headingWrapper}>
-                    <AppText style={defaultStyle.text}>Hi Usman</AppText>
-                    <AppText style={styles.headingText}>Good Morning!</AppText>
-                </View>
-                <AppText style={styles.searchHeading}>Search for a Ride</AppText>
-                <View style={styles.formWrapper}>
-                    <AppText>From City</AppText>
-                    <Pressable onPress={() => setOpenModal(true)}>
-                        <View style={styles.inputWrapper}>
+                    <View style={styles.headingWrapper}>
+                        <AppText style={defaultStyle.text}>Hi {userData?.fullName}</AppText>
+                        <AppText style={styles.headingText}>Good Morning!</AppText>
+                    </View>
+                    <AppText style={styles.searchHeading}>Search for a Ride</AppText>
+                    <View style={styles.formWrapper}>
+                        <AppText>From City</AppText>
+                        <Pressable onPress={() => setOpenModal(true)}>
+                            <View style={styles.inputWrapper}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Ionicons name="location-outline" size={23} color={colors.gray} />
+                                    <TextInput
+                                        placeholder='Select city'
+                                        value={selectedItem?.label}
+                                        autoCapitalize="none"
+                                        autoCorrect={false}
+                                        disableFullScreenUI
+                                        style={{ marginLeft: 10 }}
+                                    />
+                                </View>
+                                <Entypo name="chevron-thin-right" size={12} color={colors.gray} />
+                            </View>
+                        </Pressable>
+                        <AppText>To City</AppText>
+                        <Pressable style={styles.inputWrapper} onPress={() => setOpenDestination(true)}>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <Ionicons name="location-outline" size={23} color={colors.gray} />
                                 <TextInput
-                                    placeholder={selectedItem ? selectedItem?.label : 'Select city'}
+                                    placeholder='Select city'
                                     autoCapitalize="none"
                                     autoCorrect={false}
                                     disableFullScreenUI
+                                    value={selecteddestination?.label}
                                     style={{ marginLeft: 10 }}
                                 />
                             </View>
                             <Entypo name="chevron-thin-right" size={12} color={colors.gray} />
+                        </Pressable>
+                        <View style={styles.inputsRow}>
+                            <View style={{ width: '47%' }}>
+                                <DatePicker date={date} setDate={setDate} />
+                            </View>
+                            <View style={{ width: '47%' }}>
+                                <AppText>Passengers</AppText>
+                                <TextInput
+                                    placeholder='Passengers'
+                                    autoCapitalize="none"
+                                    autoCorrect={false}
+                                    keyboardType="phone-pad"
+                                    disableFullScreenUI
+                                    secureTextEntry={true}
+                                    backgroundColor={colors.lightBg}
+                                    style={styles.inputWrapper}
+                                    onChangeText={(value) => setPassengers(value)}
+                                />
+                            </View>
                         </View>
-                    </Pressable>
-                    <AppText>To City</AppText>
-                    <Pressable style={styles.inputWrapper} onPress={() => setOpenDestination(true)}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Ionicons name="location-outline" size={23} color={colors.gray} />
-                            <TextInput
-                                placeholder={selecteddestination ? selecteddestination?.label : 'Select city'}
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                                disableFullScreenUI
-                                style={{ marginLeft: 10 }}
-                            />
-                        </View>
-                        <Entypo name="chevron-thin-right" size={12} color={colors.gray} />
-                    </Pressable>
-                    <View style={styles.inputsRow}>
-                        <View style={{ width: '47%' }}>
-                            <DatePicker date={date} setDate={setDate} />
-                        </View>
-                        <View style={{ width: '47%' }}>
-                            <AppText>Passengers</AppText>
-                            <TextInput
-                                placeholder='Passengers'
-                                autoCapitalize="none"
-                                autoCorrect={false}
-                                keyboardType="phone-pad"
-                                disableFullScreenUI
-                                secureTextEntry={true}
-                                backgroundColor={colors.lightBg}
-                                style={styles.inputWrapper}
-                                onChangeText={(value) => setPassengers(value)}
+                        <View style={styles.buttonWrapper}>
+                            <AppButton
+                                title="Search"
+                                style={styles.signin}
+                                text={colors.white}
+                                onPress={() => searchRides(navigation)}
                             />
                         </View>
                     </View>
-                    <View style={styles.buttonWrapper}>
-                        <AppButton
-                            title="Search"
-                            style={styles.signin}
-                            text={colors.white}
-                            onPress={() => searchRides(navigation)}
-                        />
-                    </View>
-                </View>
-                <Picker
-                    setModalVisible={setOpenModal}
-                    modalVisible={openModal}
-                    citiesOptions={citiesOptions}
-                    setSelectedItem={setSelectedItem}
-                />
-                <Picker
-                    setModalVisible={setOpenDestination}
-                    modalVisible={openDestination}
-                    citiesOptions={citiesOptions}
-                    setSelectedItem={setSelecteddestination}
-                />
-            </Screen>
+                    <Picker
+                        setModalVisible={setOpenModal}
+                        modalVisible={openModal}
+                        citiesOptions={citiesOptions}
+                        setSelectedItem={setSelectedItem}
+                    />
+                    <Picker
+                        setModalVisible={setOpenDestination}
+                        modalVisible={openDestination}
+                        citiesOptions={citiesOptions}
+                        setSelectedItem={setSelecteddestination}
+                    />
+                </Screen>
+            </ScrollView>
+            {loading && <Loader loading={loading} />}
         </>
     )
 }
@@ -227,7 +242,7 @@ const styles = StyleSheet.create({
         height: 12,
     },
     headingWrapper: {
-        marginVertical: 25
+        marginVertical: 30
     },
     headingText: {
         color: defaultStyle.colors.darkBlack,
@@ -267,7 +282,7 @@ const styles = StyleSheet.create({
     },
     buttonWrapper: {
         width: '100%',
-        marginTop: 0,
+        marginTop: 20,
     },
     signin: {
         width: '100%'

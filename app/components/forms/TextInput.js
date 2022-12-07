@@ -31,8 +31,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingHorizontal: 20,
         marginVertical: 8,
-        shadowColor: 'rgba(0,0,0,0.4)',
-        elevation: 2,
+        shadowColor: 'rgba(0,0,0,0.5)',
+        elevation: 4,
     },
     input: {
         color: defaultStyle.text,

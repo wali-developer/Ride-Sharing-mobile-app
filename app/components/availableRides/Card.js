@@ -11,7 +11,8 @@ import authStorage from '../../auth/storage'
 import apiClient from '../../api/client';
 import Loader from '../../components/Loader';
 
-export default function Card({ ride, userFromData, userRides }) {
+export default function Card({ ride, userFromData, userRides, navigation }) {
+    console.log("rides-------------,", ride)
     const [user, setUser] = useState({});
     const [userData, setUserData] = useState({});
     const [loading, setLoading] = useState(false);
@@ -22,7 +23,6 @@ export default function Card({ ride, userFromData, userRides }) {
 
     const restoreUser = async () => {
         const userId = await authStorage.getUser();
-        console.log(userId)
         if (userId) {
             apiClient.get(`user/${userId?._id}`).then(res => {
                 setUser(res?.data)
@@ -55,6 +55,8 @@ export default function Card({ ride, userFromData, userRides }) {
             const { data } = await apiClient.post("/requestride", payload);
             if (data) {
                 alert(data)
+                addBookerToConversation(user?._id, selectedRide?.publisherUser?._id)
+                navigation.navigate('Chat');
             }
             setLoading(false)
         } catch (error) {
@@ -62,6 +64,20 @@ export default function Card({ ride, userFromData, userRides }) {
             console.log(error)
         }
     }
+
+    // Create conversation of ride booker with publisher
+    const addBookerToConversation = async (senderId, receiverId) => {
+        setLoading(true)
+        try {
+            const { data } = await apiClient.post("conversations", {
+                senderId: senderId,
+                receiverId: receiverId,
+            });
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+        }
+    };
 
     const checkRideExpiry = (date) => {
         const today = new Date();
@@ -114,7 +130,7 @@ export default function Card({ ride, userFromData, userRides }) {
                         </View>
                         <View style={{ width: "35%" }}>
                             <AppText style={styles.smallTExt}>Ride Estimate</AppText>
-                            <AppText style={styles.price}>Pkr. 700</AppText>
+                            <AppText style={styles.price}>Pkr. {ride?.price}</AppText>
                         </View>
                     </View>
                     {userRides == true ? (

@@ -1,4 +1,4 @@
-import { Image, StyleSheet, View } from 'react-native';
+import { Button, Image, Pressable, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import React, { useState } from 'react'
 import AppText from '../../components/AppText'
 import AppButton from '../../components/AppButton'
@@ -10,7 +10,7 @@ import Loader from '../../components/Loader';
 import useAuth from '../../auth/useAuth';
 import apiClient from '../../api/client';
 
-export default function Register() {
+export default function Register({ navigation }) {
     const auth = useAuth();
     const [registerPayload, setRegisterPayload] = useState({
         fullName: '',
@@ -58,7 +58,7 @@ export default function Register() {
     }
 
     return (
-        <>
+        <ScrollView>
             {loading && <Loader loading={loading} />}
             <View style={styles.container}>
                 <Image
@@ -109,14 +109,20 @@ export default function Register() {
                     />
                 </View>
                 <View style={styles.signUpText}>
-                    <AppText style={styles.text}>Already have account? <AppText style={{ color: colors.primary }}>Sign in</AppText></AppText>
+                    <AppText style={styles.text}>Already have account?
+                        <TouchableWithoutFeedback onPress={() => navigation.navigate("Login")}>
+                            <AppText style={{ color: colors.primary }}> Sign in</AppText>
+                        </TouchableWithoutFeedback>
+                    </AppText>
                 </View>
-                <View style={styles.skipWrapper}>
-                    <AppText>Skip</AppText>
-                    <Image source={require('../../assets/right-arrow.png')} style={styles.rightIcon} />
-                </View>
+                {/* <Pressable onPress={() => navigation.navigate("Login")} style={styles.skipWrapper}>
+                    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
+                        <AppText>Skip</AppText>
+                        <Image source={require('../../assets/right-arrow.png')} style={styles.rightIcon} />
+                    </View>
+                </Pressable> */}
             </View>
-        </>
+        </ScrollView>
     )
 }
 
@@ -124,7 +130,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 20,
-        marginTop: 20,
+        marginTop: 50,
         alignItems: 'center',
     },
     logo: {
@@ -133,8 +139,7 @@ const styles = StyleSheet.create({
     },
     headingWrapper: {
         width: '100%',
-        marginTop: 40,
-        marginBottom: 20
+        marginVertical: 40
     },
     heading: {
         textAlign: 'center',
@@ -155,21 +160,18 @@ const styles = StyleSheet.create({
     },
     buttonWrapper: {
         width: '100%',
-        marginTop: 10
+        marginTop: 30
     },
     signin: {
         width: '100%'
     },
     signUpText: {
-        marginTop: 15
+        marginTop: 30
     },
     skipWrapper: {
         position: 'absolute',
         bottom: 20,
         right: 20,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
     },
     rightIcon: {
         width: 10,

@@ -9,6 +9,8 @@ import apiClient from '../../api/client';
 import storage from '../../auth/storage';
 import Loader from '../../components/Loader';
 import { format } from 'timeago.js';
+import { Dimensions } from 'react-native';
+
 
 function MessagesScreen({ route }) {
     const { conversation, currentUser } = route?.params;
@@ -48,7 +50,7 @@ function MessagesScreen({ route }) {
                 // console.log("New Message--------------", data)
                 if (response?.ok) {
                     setMessages([...messages, response?.data]);
-                    setNewMessage(null);
+                    setNewMessage('');
                 }
             } catch (error) {
                 console.log(error);
@@ -56,9 +58,11 @@ function MessagesScreen({ route }) {
         }
     }
 
-    // useEffect(() => {
-    //     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-    // }, [messages]);
+
+    useEffect(() => {
+        // scrollRef.current?.scrollTo({ x: 0, y: scrollToBottomY, animated: 'true' });
+        scrollRef.current.scrollToEnd({ animated: true });
+    }, [messages]);
 
     return (
         <>
@@ -99,6 +103,7 @@ function MessagesScreen({ route }) {
                         autoCorrect={false}
                         disableFullScreenUI
                         style={styles.messageInput}
+                        value={newMessage}
                         onChangeText={(value) => setNewMessage(value)}
                     />
                     <TouchableOpacity onPress={storeMessage}>

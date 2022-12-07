@@ -18,7 +18,6 @@ export default function Account({ navigation }) {
         fullName: '',
         userName: '',
         email: '',
-        password: '',
         userType: '',
     });
 
@@ -32,7 +31,6 @@ export default function Account({ navigation }) {
                         fullName: res?.data?.fullName,
                         userName: res?.data?.userName,
                         email: res?.data?.email,
-                        password: res?.data?.password,
                         userType: res?.data?.userType,
                     }
                 })
