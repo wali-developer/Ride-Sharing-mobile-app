@@ -18,9 +18,11 @@ export default function HistoryScreen({ navigation }) {
             const user = await authStorage.getUser();
             if (user) {
                 setLoading(true)
-                apiClient.get(`/publishride/user_rides/${user?._id}`).then(res => {
+                apiClient.get(`/requestride/requests/${user?._id}`).then(res => {
                     setLoading(false)
                     setRides(res?.data);
+                    console.log(res?.data);
+
                 }).catch(err => {
                     setLoading(false)
                     console.log(err)

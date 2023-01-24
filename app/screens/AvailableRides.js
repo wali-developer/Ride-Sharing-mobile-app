@@ -6,7 +6,6 @@ import colors from '../config/colors'
 
 export default function AvailableRides({ route }) {
     const { data, userFromData } = route?.params;
-    console.log("Fitler data", data)
     return (
         <ScrollView style={styles.container}>
             {data?.map((ride, index) => (

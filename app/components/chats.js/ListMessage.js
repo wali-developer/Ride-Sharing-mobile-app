@@ -15,6 +15,8 @@ export default function ListMessage({ conversation, currentUser, navigation }) {
         if (currentUser) {
             apiClient.get(`user/${currentUser?._id}`).then(res => {
                 setUserName(res?.data?.fullName);
+                console.log("user name.....", res?.data?.fullName);
+
             }).catch(err => console.log(err));
         }
     }, [currentUser])
@@ -37,7 +39,7 @@ export default function ListMessage({ conversation, currentUser, navigation }) {
                 {
                     conversation: conversation,
                     currentUser: currentUser,
-                    name: userName,
+                    name: conversationUser?.fullName,
                 })
             }
         >
@@ -50,10 +52,10 @@ export default function ListMessage({ conversation, currentUser, navigation }) {
             </View>
             {/* {item?.msgs && ( */}
             <View style={styles.smallText}>
-                <AppText style={styles.timeText}>{"A day ago"}</AppText>
-                <View style={styles.messagesNotify}>
+                <AppText style={styles.timeText}>{new Date(conversation?.date).toLocaleDateString()}</AppText>
+                {/* <View style={styles.messagesNotify}>
                     <AppText style={{ fontSize: 12, color: colors.white }}>{2}</AppText>
-                </View>
+                </View> */}
             </View>
             {/* )} */}
         </Pressable>

@@ -145,7 +145,8 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     signUpText: {
-        marginTop: 50
+        marginTop: 50,
+        paddingBottom: 30
     },
     skipWrapper: {
         position: 'absolute',

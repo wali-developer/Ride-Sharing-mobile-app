@@ -42,7 +42,6 @@ export default function Account({ navigation }) {
         setLoading(true)
         try {
             const response = await apiClient.patch(`user/${user?._id}`, userData);
-            console.log("Update----------", response);
             if (response?.ok) {
                 alert(response?.data)
             } else {
@@ -61,12 +60,12 @@ export default function Account({ navigation }) {
         <>
             <ScrollView>
                 <Screen style={styles.container}>
-                    <Ionicons
+                    {/* <Ionicons
                         name="arrow-back-circle-outline"
                         size={24}
                         color={colors.white}
                         style={styles.back}
-                    />
+                    /> */}
                     <View style={styles.cover}>
                         <Image source={require('../assets/myPic.jpg')} style={styles.profile} />
                     </View>
@@ -139,18 +138,19 @@ const styles = StyleSheet.create({
         zIndex: 99
     },
     cover: {
-        height: 100,
+        height: 80,
         backgroundColor: colors.primary,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: -50
     },
     profile: {
         width: 80,
         height: 80,
         borderRadius: 100,
-        marginBottom: -100
+        marginBottom: -80
     },
     formWrapper: {
         marginTop: 60,

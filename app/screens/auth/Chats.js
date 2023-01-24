@@ -1,4 +1,4 @@
-import { FlatList, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { FlatList, ScrollView, StyleSheet, View } from 'react-native'
 import React, { useEffect, useState } from 'react';
 import Screen from '../../components/Screen';
 import AppText from '../../components/AppText';
@@ -44,24 +44,26 @@ export default function Chat({ navigation }) {
     return (
         <>
             {loading && <Loader loading={loading} />}
-            <Screen style={styles.container}>
-                <View style={styles.header}>
-                    <AppText style={styles.headerText}>Messages</AppText>
-                    <AntDesign name="search1" size={24} color={colors.gray} />
-                </View>
-                <View>
-                    <FlatList
-                        style={styles.messagesList}
-                        data={conversations}
-                        renderItem={({ item }) => <ListMessage
-                            conversation={item}
-                            currentUser={user}
-                            navigation={navigation}
-                        />}
-                        keyExtractor={item => item._id}
-                    />
-                </View>
-            </Screen>
+            <ScrollView>
+                <Screen style={styles.container}>
+                    <View style={styles.header}>
+                        <AppText style={styles.headerText}>Messages</AppText>
+                        <AntDesign name="search1" size={24} color={colors.gray} />
+                    </View>
+                    <View>
+                        <FlatList
+                            style={styles.messagesList}
+                            data={conversations}
+                            renderItem={({ item }) => <ListMessage
+                                conversation={item}
+                                currentUser={user}
+                                navigation={navigation}
+                            />}
+                            keyExtractor={item => item._id}
+                        />
+                    </View>
+                </Screen>
+            </ScrollView>
         </>
     )
 }

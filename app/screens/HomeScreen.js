@@ -75,10 +75,10 @@ export default function HomeScreen({ navigation }) {
             date: date,
             passengerNeeded: passengers
         }
-        console.log("Payload: ", payload)
         try {
             // const response = await searchApi?.searchRides(payload?.goingFrom, payload?.goingTo);
             const { data } = await apiClient.get("/publishride", payload);
+
             if (Array.isArray(data)) {
 
                 const filterResults = data?.filter((ride, index) => {
@@ -103,8 +103,9 @@ export default function HomeScreen({ navigation }) {
                         <View style={{ width: 45, height: 45, borderRadius: 100, overflow: "hidden", backgroundColor: "red" }}>
                             <Image
                                 style={styles?.avatar}
-                                source={require("../assets/avatar.png")}
-                                resizeMode="contain" />
+                                source={require("../assets/myPic.jpg")}
+                                resizeMode="contain"
+                            />
                         </View>
 
                         <View style={styles.notificationWrapper}>
@@ -209,7 +210,7 @@ const styles = StyleSheet.create({
     avatar: {
         width: 45,
         height: 45,
-        // borderRadius: 22.5,
+        resizeMode: 'cover'
     },
     header: {
         display: 'flex',

@@ -19,10 +19,10 @@ const AccountNavigator = () => (
             name="Profile"
             component={EditProfile}
             options={{
-                headerShown: false,
+                // headerShown: false,
                 headerTintColor: colors.white,
                 headerShadowVisible: false,
-                // headerBackground: () => <HeaderBackground />,
+                headerBackground: () => <HeaderBackground />,
             }}
         />
     </Stack.Navigator>

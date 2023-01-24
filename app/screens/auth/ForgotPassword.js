@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { Image, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import React from 'react'
 import AppText from '../../components/AppText'
 import AppButton from '../../components/AppButton'
@@ -7,7 +7,7 @@ import Textinput from '../../components/forms/TextInput';
 
 export default function ForgotPassword({ navigation }) {
     return (
-        <>
+        <ScrollView>
             <View style={styles.container}>
                 <Image
                     style={styles?.logo}
@@ -50,7 +50,7 @@ export default function ForgotPassword({ navigation }) {
                 </View>
             </View>
             {/* <Image source={require('../../assets/left-arrow.png')} style={styles.backButton} /> */}
-        </>
+        </ScrollView>
     )
 }
 
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     signInText: {
-        marginTop: 50
+        marginTop: 50,
     },
     skipWrapper: {
         position: 'absolute',

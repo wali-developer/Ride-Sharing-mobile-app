@@ -12,7 +12,6 @@ import apiClient from '../../api/client';
 import Loader from '../../components/Loader';
 
 export default function Card({ ride, userFromData, userRides, navigation }) {
-    console.log("rides-------------,", ride)
     const [user, setUser] = useState({});
     const [userData, setUserData] = useState({});
     const [loading, setLoading] = useState(false);

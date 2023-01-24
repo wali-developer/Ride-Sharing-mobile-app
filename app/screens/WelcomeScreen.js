@@ -6,7 +6,7 @@ import colors from '../config/colors'
 
 export default function WelcomeScreen({ navigation }) {
     return (
-        <>
+        <ScrollView>
             <View style={styles.container}>
                 <Image
                     style={styles?.logo}
@@ -35,7 +35,7 @@ export default function WelcomeScreen({ navigation }) {
                     />
                 </View>
             </View>
-        </>
+        </ScrollView>
     )
 }
 
@@ -67,8 +67,8 @@ const styles = StyleSheet.create({
     },
     buttonWrapper: {
         width: '100%',
-        marginTop: 20,
-        position: 'absolute',
+        marginTop: 60,
+        // position: 'absolute',
         bottom: 30,
     },
     signin: {

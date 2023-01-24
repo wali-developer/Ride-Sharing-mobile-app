@@ -13,7 +13,8 @@ import { Dimensions } from 'react-native';
 
 
 function MessagesScreen({ route }) {
-    const { conversation, currentUser } = route?.params;
+    const { conversation, currentUser, name } = route?.params;
+
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
     const [newMessage, setNewMessage] = useState(null);
@@ -47,7 +48,6 @@ function MessagesScreen({ route }) {
         } else {
             try {
                 const response = await apiClient.post('/messages', message);
-                // console.log("New Message--------------", data)
                 if (response?.ok) {
                     setMessages([...messages, response?.data]);
                     setNewMessage('');

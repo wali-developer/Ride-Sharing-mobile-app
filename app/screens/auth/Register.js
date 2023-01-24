@@ -24,14 +24,11 @@ export default function Register({ navigation }) {
         try {
             // const response = await usersApi.register(registerPayload)
             const response = await apiClient.post('/user/register', registerPayload)
-            console.log("Response: ", response?.data)
             if (response.data && response.ok) {
-                console.log(response.data)
                 alert(response?.data)
             }
             else {
                 alert("An unexpected error occurred.");
-                console.log(response);
             }
             setRegisterPayload({
                 fullName: '',
@@ -166,7 +163,8 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     signUpText: {
-        marginTop: 30
+        marginTop: 30,
+        paddingBottom: 30,
     },
     skipWrapper: {
         position: 'absolute',
